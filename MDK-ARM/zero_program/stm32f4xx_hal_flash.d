@@ -16,12 +16,13 @@ zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4x
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
 zero_program\stm32f4xx_hal_flash.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
-zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
+zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
+zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_can.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 zero_program\stm32f4xx_hal_flash.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h

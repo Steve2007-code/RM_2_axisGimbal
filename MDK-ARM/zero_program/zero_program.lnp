@@ -2,10 +2,12 @@
 "zero_program\startup_stm32f407xx.o"
 "zero_program\main.o"
 "zero_program\gpio.o"
+"zero_program\can.o"
 "zero_program\stm32f4xx_it.o"
 "zero_program\stm32f4xx_hal_msp.o"
-"zero_program\stm32f4xx_hal_tim.o"
-"zero_program\stm32f4xx_hal_tim_ex.o"
+"zero_program\system_stm32f4xx.o"
+"zero_program\dm_bldc_motor.o"
+"zero_program\stm32f4xx_hal_can.o"
 "zero_program\stm32f4xx_hal_rcc.o"
 "zero_program\stm32f4xx_hal_rcc_ex.o"
 "zero_program\stm32f4xx_hal_flash.o"
@@ -19,7 +21,6 @@
 "zero_program\stm32f4xx_hal_cortex.o"
 "zero_program\stm32f4xx_hal.o"
 "zero_program\stm32f4xx_hal_exti.o"
-"zero_program\system_stm32f4xx.o"
 --library_type=microlib --strict --scatter "zero_program\zero_program.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
