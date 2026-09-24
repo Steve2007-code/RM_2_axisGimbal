@@ -29,6 +29,9 @@ zero_program\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.
 zero_program\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
 zero_program\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 zero_program\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+zero_program\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 zero_program\main.o: ../Inc/can.h
+zero_program\main.o: ../Inc/usart.h
 zero_program\main.o: ../Inc/gpio.h
 zero_program\main.o: ./User/Inc/DM_BLDC_Motor.h
+zero_program\main.o: ./User/Inc/UART_Data.h

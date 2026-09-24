@@ -20,11 +20,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "can.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "DM_BLDC_Motor.h"
+#include "UART_Data.h"
 
 /* USER CODE END Includes */
 
@@ -90,8 +92,12 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_CAN1_Init();
+  MX_CAN2_Init();
+  MX_USART1_UART_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
 	DM_CAN_Motor_Init();
+	UART_Init();
 
   /* USER CODE END 2 */
 
@@ -102,7 +108,9 @@ int main(void)
 	
   while (1)
   {
-//		DM_CAN_Motor_Rotation_deg(&DM_Motor_4340_StructData,0);
+		UART_Send_UART6_To_UART1();
+//		CAN_Send_Data_Frame(&hcan2, );
+//		DM_CAN_Motor_Rotation_deg(&DM_Motor_4340_StructData,-90);
 //		DM_CAN_Motor_Send_Data(&hcan1, 0x001, DM_Mototr_Disable, 8);
 //		DM_CAN_Motor_Send_Data(&hcan1, 0x003, DM_Mototr_Disable, 8);
 //		HAL_Delay(400);

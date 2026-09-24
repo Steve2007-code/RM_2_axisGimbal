@@ -2,18 +2,18 @@
 #include "can.h"
 
 /*CAN数据帧定义*/
-uint8_t DM_Mototr_Enable[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFC};
-uint8_t DM_Mototr_Disable[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFD};
+uint8_t DM_Mototr_Enable[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFC};//电机使能
+uint8_t DM_Mototr_Disable[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFD};//电机失能
 
 /*达妙电机MIT模式下的结构体定义*/
-DM_Motor_Data DM_Motor_4310_StructData;
-DM_Motor_Data DM_Motor_4340_StructData;
+DM_Motor_Data DM_Motor_4310_StructData;//4310参数定义结构体
+DM_Motor_Data DM_Motor_4340_StructData;//4340参数定义结构体
 
 /*
   * @brief  DM电机结构体初始化
   * @param  无
-  * @note		无
-  * @retval 代码初始化时务必进行初始化
+  * @note		代码初始化时务必进行初始化
+  * @retval 无
   */
 void DM_CAN_Motor_Init(void)
 {
