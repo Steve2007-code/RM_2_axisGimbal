@@ -91,15 +91,21 @@ int main(void)
   MX_GPIO_Init();
   MX_CAN1_Init();
   /* USER CODE BEGIN 2 */
+	DM_CAN_Motor_Init();
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Disable);
+	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Disable);
+	
   while (1)
   {
-		DM_CAN_Motor_Send_Data(&hcan1, 0x001, DM_Mototr_Enable, 8);
-		HAL_Delay(400);
+//		DM_CAN_Motor_Rotation_deg(&DM_Motor_4340_StructData,0);
+//		DM_CAN_Motor_Send_Data(&hcan1, 0x001, DM_Mototr_Disable, 8);
+//		DM_CAN_Motor_Send_Data(&hcan1, 0x003, DM_Mototr_Disable, 8);
+//		HAL_Delay(400);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
