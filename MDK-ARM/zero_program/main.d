@@ -35,3 +35,4 @@ zero_program\main.o: ../Inc/usart.h
 zero_program\main.o: ../Inc/gpio.h
 zero_program\main.o: ./User/Inc/DM_BLDC_Motor.h
 zero_program\main.o: ./User/Inc/UART_Data.h
+zero_program\main.o: ./User/Inc/RM_Gimbal_Track.h

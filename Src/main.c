@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "DM_BLDC_Motor.h"
 #include "UART_Data.h"
+#include "RM_Gimbal_Track.h"
 
 /* USER CODE END Includes */
 
@@ -98,17 +99,22 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	DM_CAN_Motor_Init();
 	UART_Init();
+	GimbalTrack_Init();
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Disable);
-	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Disable);
+	/* 追踪要跑必须使能电机；想先失能调试就把下面这行注释掉 */
+	HAL_Delay(5000);
+	GimbalTrack_Enable();
+//	DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Disable);
+//	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Disable);
 	
   while (1)
   {
-		UART_Send_UART6_To_UART1();
+		GimbalTrack_Pump();			/* 取串口6数据 -> 解析 -> 转发串口1 */
+		GimbalTrack_Control();	/* PD 运算 + 发 CAN(内部限频 2ms) */
 //		CAN_Send_Data_Frame(&hcan2, );
 //		DM_CAN_Motor_Rotation_deg(&DM_Motor_4340_StructData,-90);
 //		DM_CAN_Motor_Send_Data(&hcan1, 0x001, DM_Mototr_Disable, 8);

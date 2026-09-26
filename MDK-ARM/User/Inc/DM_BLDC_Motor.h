@@ -31,7 +31,7 @@ extern DM_Motor_Data DM_Motor_4310_StructData;
 
 /*电机ID*/
 #define DM_Motor_4310_ID 0x001
-#define DM_Motor_4340_ID 0x003
+#define DM_Motor_4340_ID 0x002
 
 /*CAN数据帧声明*/
 extern uint8_t DM_Mototr_Enable[8];

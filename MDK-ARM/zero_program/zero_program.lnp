@@ -10,6 +10,7 @@
 "zero_program\dm_bldc_motor.o"
 "zero_program\dm_imu_l1.o"
 "zero_program\uart_data.o"
+"zero_program\rm_gimbal_track.o"
 "zero_program\stm32f4xx_hal_can.o"
 "zero_program\stm32f4xx_hal_rcc.o"
 "zero_program\stm32f4xx_hal_rcc_ex.o"

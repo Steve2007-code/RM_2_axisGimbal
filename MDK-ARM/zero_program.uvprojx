@@ -556,6 +556,11 @@
               <FileType>5</FileType>
               <FilePath>.\User\Inc\UART_Data.h</FilePath>
             </File>
+            <File>
+              <FileName>RM_Gimbal_Track.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\Inc\RM_Gimbal_Track.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -575,6 +580,11 @@
               <FileName>UART_Data.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\Src\UART_Data.c</FilePath>
+            </File>
+            <File>
+              <FileName>RM_Gimbal_Track.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Src\RM_Gimbal_Track.c</FilePath>
             </File>
           </Files>
         </Group>
