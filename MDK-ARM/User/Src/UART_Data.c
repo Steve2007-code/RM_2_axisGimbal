@@ -1,17 +1,17 @@
 #include "UART_Data.h"
 
 /*串口发/接数据定义*/
-volatile uint8_t UART1_TX_Buf[64];//发送缓冲区
+//volatile uint8_t UART1_TX_Buf[64];//发送缓冲区
 uint8_t UART1_RX_Buf[1];//中断接收单字节临时缓存
 volatile uint8_t UART1_RX_Fifo[128];//接收环形 FIFO 缓冲区
 volatile uint16_t UART1_RX_idx = 0;//串口1写索引
 volatile uint16_t UART1_RX_Rd = 0;//串口1读索引
 uint8_t UART1_TX_Busy = 0;//串口1发送忙标志
 
-volatile uint8_t UART6_TX_BBuf[64];//发送缓冲区
+//volatile uint8_t UART6_TX_Buf[64];//发送缓冲区
 uint8_t UART6_RX_Buf[1];//中断接收单字节临时缓存
 volatile uint8_t UART6_RX_Fifo[128];//接收环形 FIFO 缓冲区
-volatile uint16_t UART6_RX_idx = 0;//串口6索引
+volatile uint16_t UART6_RX_idx = 0;//串口写6索引
 volatile uint16_t UART6_RX_Rd = 0;//串口6读索引
 uint8_t UART6_TX_Busy = 0;//串口6发送忙标志
 
@@ -92,7 +92,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief  UART 错误回调出错后重新挂起中断接收
+  * @brief  UART 出错后重新挂起中断接收
   * @param  huart 触发错误的串口句柄
   * @note		出错之后中断重启接收
   * @retval 无

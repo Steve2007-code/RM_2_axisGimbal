@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "can.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -27,6 +28,7 @@
 /* USER CODE BEGIN Includes */
 #include "DM_BLDC_Motor.h"
 #include "UART_Data.h"
+#include "Gimbal_Track.h"
 
 /* USER CODE END Includes */
 
@@ -95,7 +97,9 @@ int main(void)
   MX_CAN2_Init();
   MX_USART1_UART_Init();
   MX_USART6_UART_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
+	HAL_TIM_Base_Start_IT(&htim1);
 	DM_CAN_Motor_Init();
 	UART_Init();
 
@@ -105,15 +109,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Disable);
 	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Disable);
+	HAL_Delay(1000);
+	DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Enable);
+	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Enable);
 	
   while (1)
   {
-		UART_Send_UART6_To_UART1();
-//		CAN_Send_Data_Frame(&hcan2, );
-//		DM_CAN_Motor_Rotation_deg(&DM_Motor_4340_StructData,-90);
-//		DM_CAN_Motor_Send_Data(&hcan1, 0x001, DM_Mototr_Disable, 8);
-//		DM_CAN_Motor_Send_Data(&hcan1, 0x003, DM_Mototr_Disable, 8);
-//		HAL_Delay(400);
+		UART6_Data_Frame();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

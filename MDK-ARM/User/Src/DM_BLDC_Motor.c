@@ -38,7 +38,7 @@ void DM_CAN_Motor_Init(void)
 	/*4340数据初始化*/
 	DM_Motor_4340_StructData.hcan = &hcan1;
 	DM_Motor_4340_StructData.ID = DM_Motor_4340_ID;
-	DM_Motor_4340_StructData.Kd = 2;
+	DM_Motor_4340_StructData.Kd = 5;
 	DM_Motor_4340_StructData.Kd_max = 5;
 	DM_Motor_4340_StructData.Kd_min = 0;
 	DM_Motor_4340_StructData.Kp = 20;
@@ -112,7 +112,7 @@ static uint16_t DM_Motor_12_Data_Frame(float x, float xmin, float xmax)
 }
 
 /*
-  * @brief  CAN发送电机旋转数据帧(弧度制)
+  * @brief  CAN发送电机旋转数据帧(弧度制)(定位置控制)
   * @param  id 电机id，可以是 DM_Motor_4310_StructData 或 DM_Motor_4340_StructData
 	* @param	Position 目标位置 Velocity 目标速度 Kp 比例 Kd 微分 Torque 扭矩
   * @note		无
@@ -123,11 +123,11 @@ HAL_StatusTypeDef DM_CAN_Motor_Rotation_Rad(DM_Motor_Data *ax, float Position)
 	uint8_t Data[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	
 	ax ->Position = Position;
-	uint16_t Position_raw  = DM_Motor_16_Data_Frame(ax ->Position, ax ->Position_min, ax ->Position_max);
-	uint16_t Velocity_raw  = DM_Motor_12_Data_Frame(ax ->Velocity, ax ->Velocity_min, ax ->Velocity_max);
-	uint16_t  Kp_raw  = DM_Motor_12_Data_Frame(ax ->Kp, ax ->Kp_min, ax ->Kp_max);
-	uint16_t  Kd_raw = DM_Motor_12_Data_Frame(ax ->Kd, ax ->Kd_min, ax ->Kd_max);
-	uint16_t  Torque_raw= DM_Motor_12_Data_Frame(ax ->Torque, ax ->Torque_min, ax ->Torque_max);
+	uint16_t Position_raw = DM_Motor_16_Data_Frame(ax ->Position, ax ->Position_min, ax ->Position_max);
+	uint16_t Velocity_raw = DM_Motor_12_Data_Frame(ax ->Velocity, ax ->Velocity_min, ax ->Velocity_max);
+	uint16_t Kp_raw = DM_Motor_12_Data_Frame(ax ->Kp, ax ->Kp_min, ax ->Kp_max);
+	uint16_t Kd_raw = DM_Motor_12_Data_Frame(ax ->Kd, ax ->Kd_min, ax ->Kd_max);
+	uint16_t Torque_raw = DM_Motor_12_Data_Frame(ax ->Torque, ax ->Torque_min, ax ->Torque_max);
 	
 	Data[0] = (uint8_t)(Position_raw >> 8);
   Data[1] = (uint8_t)(Position_raw & 0xFF);
@@ -142,8 +142,8 @@ HAL_StatusTypeDef DM_CAN_Motor_Rotation_Rad(DM_Motor_Data *ax, float Position)
 }
 
 /*
-  * @brief  CAN发送电机旋转数据帧(角度制)
-  * @param  id 电机id，可以是 DM_Motor_4310_StructData 或 DM_Motor_4340_StructData
+  * @brief  CAN发送电机旋转数据帧(角度制)(定位置控制)
+  * @param  ax 电机结构体指针 Position目标位置
 	* @param	Position 目标位置 Velocity 目标速度 Kp 比例 Kd 微分 Torque 扭矩
   * @note		无
   * @retval HAL返回的CAN发送状态
@@ -153,11 +153,11 @@ HAL_StatusTypeDef DM_CAN_Motor_Rotation_deg(DM_Motor_Data *ax, float Position)
 	uint8_t Data[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 	
 	ax ->Position = Position * PI / 180.0f;
-	uint16_t Position_raw  = DM_Motor_16_Data_Frame(ax ->Position, ax ->Position_min, ax ->Position_max);
-	uint16_t Velocity_raw  = DM_Motor_12_Data_Frame(ax ->Velocity, ax ->Velocity_min, ax ->Velocity_max);
-	uint16_t  Kp_raw  = DM_Motor_12_Data_Frame(ax ->Kp, ax ->Kp_min, ax ->Kp_max);
-	uint16_t  Kd_raw = DM_Motor_12_Data_Frame(ax ->Kd, ax ->Kd_min, ax ->Kd_max);
-	uint16_t  Torque_raw= DM_Motor_12_Data_Frame(ax ->Torque, ax ->Torque_min, ax ->Torque_max);
+	uint16_t Position_raw = DM_Motor_16_Data_Frame(ax ->Position, ax ->Position_min, ax ->Position_max);
+	uint16_t Velocity_raw = DM_Motor_12_Data_Frame(ax ->Velocity, ax ->Velocity_min, ax ->Velocity_max);
+	uint16_t Kp_raw = DM_Motor_12_Data_Frame(ax ->Kp, ax ->Kp_min, ax ->Kp_max);
+	uint16_t Kd_raw = DM_Motor_12_Data_Frame(ax ->Kd, ax ->Kd_min, ax ->Kd_max);
+	uint16_t Torque_raw = DM_Motor_12_Data_Frame(ax ->Torque, ax ->Torque_min, ax ->Torque_max);
 	
 	Data[0] = (uint8_t)(Position_raw >> 8);
   Data[1] = (uint8_t)(Position_raw & 0xFF);
@@ -170,4 +170,35 @@ HAL_StatusTypeDef DM_CAN_Motor_Rotation_deg(DM_Motor_Data *ax, float Position)
 	
 	return CAN_Send_Data_Frame(ax ->hcan, ax ->ID, Data, 8);
 }
-	
+
+/*
+  * @brief  CAN发送电机旋转数据帧(弧度制)(定速度控制)
+  * @param  ax 电机结构体指针 vel 目标角速度
+  * @note		无
+  * @retval HAL返回的CAN发送状态
+  */
+HAL_StatusTypeDef DM_CAN_Motor_Velocity_Rad(DM_Motor_Data *ax, float vel)
+{
+	uint8_t  Data[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	uint16_t Position_raw, Velocity_raw, Kp_raw, Kd_raw, Torque_raw;
+
+	ax->Velocity = vel;
+
+	Position_raw = DM_Motor_16_Data_Frame(0.0f, ax->Position_min, ax->Position_max);
+	Velocity_raw = DM_Motor_12_Data_Frame(ax->Velocity, ax->Velocity_min, ax->Velocity_max);
+	Kp_raw = 0;
+	Kd_raw = DM_Motor_12_Data_Frame(ax->Kd, ax->Kd_min, ax->Kd_max);
+	Torque_raw = DM_Motor_12_Data_Frame(ax->Torque, ax->Torque_min, ax->Torque_max);
+
+	Data[0] = (uint8_t)(Position_raw >> 8);
+	Data[1] = (uint8_t)(Position_raw & 0xFF);
+	Data[2] = (uint8_t)(Velocity_raw >> 4);
+	Data[3] = (uint8_t)(((Velocity_raw & 0x0F) << 4) | (Kp_raw >> 8));
+	Data[4] = (uint8_t)(Kp_raw & 0xFF);
+	Data[5] = (uint8_t)(Kd_raw >> 4);
+	Data[6] = (uint8_t)(((Kd_raw & 0x0F) << 4) | (Torque_raw >> 8));
+	Data[7] = (uint8_t)(Torque_raw & 0xFF);
+
+	return CAN_Send_Data_Frame(ax->hcan, ax->ID, Data, 8);
+}
+
