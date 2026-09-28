@@ -54,13 +54,15 @@
 
    [坑] Kd 千万不要按"和 Kp 差不多"来给。D 项信号本身带着视觉延迟+低通，
         Kd=0.0015 时仿真纹波直接炸到 11度（持续振荡，云台一直抖）。
-        安全区是 0 ~ 0.0003，超过 0.001 必炸。宁可先用 Kd=0 纯 P 跑。
+        实测绝对上限：30fps -> 0.0002，95fps -> 0.0003，超过 0.001 必炸。
+        Kd 不随 Kp 线性放大（D 项乘的是 px/s，量级由噪声和帧率决定），
+        别按 Kp 的 1/10 去给大 Kp 配 Kd，会超标。宁可先用 Kd=0 纯 P 跑。
 
    [镜头 FOV 不是 60度时] 按这个缩放:
         px_per_rad = 画面宽(px) / FOV(弧度)
         Kp_new = TRACK_KP * 1833 / px_per_rad
         FOV 越大 -> 画面越"广" -> 同样像素偏差对应的角度越小 -> Kp 可以越大 */
-#define TRACK_KP                0.0040f
+#define TRACK_KP                0.0080f
 #define TRACK_KD                0.0003f
 
 /* 输出限幅(rad/s)，防止一帧大误差直接把云台甩飞 */
@@ -71,7 +73,7 @@
 #define TRACK_OUT_TAU           0.03f
 
 /* 死区(px)。偏差小于它就认为已经对准，输出 0，防止到位后电机来回抖 */
-#define TRACK_DEADZONE_PX       4
+#define TRACK_DEADZONE_PX       10
 
 /* 连续收到几帧"找不到"才真的判丢。防单帧误检（光照抖动、遮挡一瞬） */
 #define TRACK_LOST_CONFIRM      3
@@ -118,6 +120,7 @@ typedef struct
     float d_err_pitch;          /* 俯仰偏差变化率 px/s */
     uint8_t  tracked;           /* 1=当前看到目标  0=丢失 */
     uint8_t  lost_cnt;          /* 连续丢失帧计数 */
+    uint8_t  reset_pitch;       /* 1=俯仰复位中：PD 暂停、目标角锁 0（由 rst 字段置位） */
     uint32_t frame_cnt;         /* 收到的有效帧计数（调试用，看它涨说明收到数据了） */
     uint32_t last_frame_ms;     /* 最近一帧时刻 HAL_GetTick() */
 
@@ -163,7 +166,9 @@ void GimbalTrack_Disable(void);
 /**
   * @brief  喂一个字节给协议解析器
   * @param  c 从串口6 收到的一个字节
-  * @note   内部按行(\n)缓冲解析，识别 "YSC,dx,dy" / "YSL"，兼容旧版 "YC" / "YL"。
+  * @note   内部按行(\n)缓冲解析。
+  *         新协议 YSC,has,dx,dy,rst ：has=1 有目标/0 无目标，rst=1 俯仰复位
+  *         旧协议 YSC,dx,dy 和 YC,dx,dy / YSL / YL 仍然兼容（按逗号个数自动判断）
   *         二进制协议也不要它，改协议时只需要改这一个函数
   * @retval 无
   */
@@ -195,5 +200,14 @@ void GimbalTrack_Control(void);
   * @retval 无
   */
 void GimbalTrack_SetGain(float kp, float kd);
+
+/**
+  * @brief  俯仰轴复位（目标角归零并锁住）
+  * @param  无
+  * @note   一般由串口 rst 字段触发，也可以手动调用。
+  *         复位期间俯仰 PD 暂停积分、目标角锁 0；rst 撤销后自动恢复跟踪
+  * @retval 无
+  */
+void GimbalTrack_ResetPitch(void);
 
 #endif

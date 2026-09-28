@@ -170,18 +170,27 @@ static void Track_OnLost(void)
 }
 
 /* 解析一行完整文本 */
+/*
+ * 协议格式：
+ *   新：YSC,has,dx,dy,rst\n     has=1 有目标 / 0 无目标，rst=1 俯仰复位
+ *   旧：YSC,dx,dy\n  或  YC,dx,dy\n  或  YSL\n / YL\n
+ * 新旧靠逗号个数区分：新协议 4 个字段(3 个逗号)，旧协议 2 个字段(1 个逗号)
+ */
 static void Track_ParseLine(const char *s)
 {
     const char *p;
+    const char *q;
     int dx;
     int dy;
+    int has;
+    int rst;
+    int nfield;
 
-    /* 新协议 YSC,dx,dy  /  旧协议 YC,dx,dy */
     if ((s[0] == 'Y') && (s[1] == 'S') && (s[2] == 'C') && (s[3] == ',')) p = s + 4;
     else if ((s[0] == 'Y') && (s[1] == 'C') && (s[2] == ','))             p = s + 3;
     else
     {
-        /* 新协议 YSL  /  旧协议 YL */
+        /* YSL / YL：无目标 */
         if ((s[0] == 'Y') && ((s[1] == 'L') || ((s[1] == 'S') && (s[2] == 'L'))))
         {
             Track_OnLost();
@@ -189,12 +198,45 @@ static void Track_ParseLine(const char *s)
         return;
     }
 
+    /* 数逗号 */
+    nfield = 1;
+    q = p;
+    while (*q != '\0')
+    {
+        if (*q == ',') nfield++;
+        q++;
+    }
+
+    has = 1;
+    rst = 0;
+
+    /* 新协议多出来的第一个字段：是否有目标 */
+    if (nfield >= 4)
+    {
+        has = Track_Atoi(p);
+        while ((*p != '\0') && (*p != ',')) p++;
+        if (*p == ',') p++;
+    }
+
     dx = Track_Atoi(p);
     while ((*p != '\0') && (*p != ',')) p++;
     if (*p == ',') p++;
     dy = Track_Atoi(p);
 
-    Track_OnFrame(dx, dy);
+    /* 新协议最后多出来的字段：俯仰复位 */
+    if (nfield >= 4)
+    {
+        while ((*p != '\0') && (*p != ',')) p++;
+        if (*p == ',') p++;
+        rst = Track_Atoi(p);
+    }
+
+    /* 复位字段独立于"是否有目标"：看不到目标时也能让俯仰回零 */
+    if (rst) GimbalTrack_ResetPitch();
+    else     g_GimbalTrack.reset_pitch = 0;
+
+    if (has) Track_OnFrame(dx, dy);
+    else     Track_OnLost();
 }
 
 void GimbalTrack_FeedByte(uint8_t c)
@@ -240,6 +282,7 @@ void GimbalTrack_Init(void)
     g_GimbalTrack.kp             = TRACK_KP;
     g_GimbalTrack.kd             = TRACK_KD;
     g_GimbalTrack.tracked        = 0;
+    g_GimbalTrack.reset_pitch    = 0;
     g_GimbalTrack.lost_cnt       = TRACK_LOST_CONFIRM;
     g_GimbalTrack.frame_cnt      = 0;
     g_GimbalTrack.last_frame_ms  = HAL_GetTick();
@@ -263,6 +306,15 @@ void GimbalTrack_Disable(void)
 {
     DM_CAN_Motor_SetEnable(DM_Motor_4310_ID, DM_Mototr_Disable);
     DM_CAN_Motor_SetEnable(DM_Motor_4340_ID, DM_Mototr_Disable);
+}
+
+void GimbalTrack_ResetPitch(void)
+{
+    g_GimbalTrack.reset_pitch  = 1;
+    g_GimbalTrack.target_pitch = 0.0f;
+    g_GimbalTrack.out_pitch    = 0.0f;
+    g_GimbalTrack.err_pitch    = 0.0f;
+    g_GimbalTrack.d_err_pitch  = 0.0f;
 }
 
 void GimbalTrack_SetGain(float kp, float kd)
@@ -373,6 +425,25 @@ void GimbalTrack_Control(void)
                TRACK_POS_KP, TRACK_POS_KD, 0.0f,
                TRACK_YAW_PMAX, TRACK_YAW_VMAX);
 #endif
+
+    /* 复位期间：俯仰不积分、目标角锁 0，电机内部位置环把它拉回零点 */
+    if (g_GimbalTrack.reset_pitch)
+    {
+        g_GimbalTrack.target_pitch = 0.0f;
+        g_GimbalTrack.out_pitch    = 0.0f;
+#if TRACK_PITCH_USE_VEL
+        Track_Send(&DM_Motor_4310_StructData,
+                   0.0f, 0.0f,
+                   0.0f, TRACK_VEL_KD, 0.0f,
+                   TRACK_PITCH_PMAX, TRACK_PITCH_VMAX);
+#else
+        Track_Send(&DM_Motor_4310_StructData,
+                   0.0f, 0.0f,
+                   TRACK_POS_KP, TRACK_POS_KD, 0.0f,
+                   TRACK_PITCH_PMAX, TRACK_PITCH_VMAX);
+#endif
+        return;
+    }
 
 #if TRACK_PITCH_USE_VEL
     Track_Send(&DM_Motor_4310_StructData,

@@ -106,7 +106,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	/* 追踪要跑必须使能电机；想先失能调试就把下面这行注释掉 */
-	HAL_Delay(5000);
+	HAL_Delay(1000);
 	GimbalTrack_Enable();
 //	DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Disable);
 //	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Disable);
