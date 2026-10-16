@@ -29,6 +29,7 @@
 #include "DM_BLDC_Motor.h"
 #include "UART_Data.h"
 #include "Gimbal_Track.h"
+#include "DM_IMU_L1_V1.0.h"
 
 /* USER CODE END Includes */
 
@@ -115,7 +116,9 @@ int main(void)
 	
   while (1)
   {
-		UART6_Data_Frame();
+		//UART6_Data_Frame();
+		Red_DM_IMU_Data();
+		HAL_Delay(50);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

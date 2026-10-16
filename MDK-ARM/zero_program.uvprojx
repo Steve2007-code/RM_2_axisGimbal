@@ -134,11 +134,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4107</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -617,6 +617,11 @@
               <FileType>5</FileType>
               <FilePath>.\User\Inc\Gimbal_Track.h</FilePath>
             </File>
+            <File>
+              <FileName>DM_IMU_L1_V1.0.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\Inc\DM_IMU_L1_V1.0.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -641,6 +646,11 @@
               <FileName>Gimbal_Track.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\Src\Gimbal_Track.c</FilePath>
+            </File>
+            <File>
+              <FileName>DM_IMU_L1_V1.0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Src\DM_IMU_L1_V1.0.c</FilePath>
             </File>
           </Files>
         </Group>

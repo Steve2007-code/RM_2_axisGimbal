@@ -39,3 +39,4 @@ zero_program\main.o: ../Inc/gpio.h
 zero_program\main.o: ./User/Inc/DM_BLDC_Motor.h
 zero_program\main.o: ./User/Inc/UART_Data.h
 zero_program\main.o: ./User/Inc/Gimbal_Track.h
+zero_program\main.o: ./User/Inc/DM_IMU_L1_V1.0.h

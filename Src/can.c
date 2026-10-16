@@ -68,14 +68,11 @@ void MX_CAN1_Init(void)
 	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
 	sFilterConfig.SlaveStartFilterBank = 0;
 	HAL_CAN_ConfigFilter(&hcan1,&sFilterConfig);
-	HAL_CAN_ConfigFilter(&hcan2,&sFilterConfig);
 	
 	/*启动CAN*/
 	HAL_CAN_Start(&hcan1);
-	HAL_CAN_Start(&hcan2);
 	/*开启CAN中断*/
 	HAL_CAN_ActivateNotification(&hcan1,CAN_IT_RX_FIFO0_MSG_PENDING);
-	HAL_CAN_ActivateNotification(&hcan2,CAN_IT_RX_FIFO0_MSG_PENDING);
 
   /* USER CODE END CAN1_Init 2 */
 
@@ -108,6 +105,24 @@ void MX_CAN2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN CAN2_Init 2 */
+	/*过滤器配置*/
+	CAN_FilterTypeDef sFilterConfig;
+	sFilterConfig.FilterActivation = CAN_FILTER_ENABLE;
+	sFilterConfig.FilterBank = 14;
+	sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
+	sFilterConfig.FilterIdHigh = 0x0000;
+	sFilterConfig.FilterIdLow = 0x0000;
+	sFilterConfig.FilterMaskIdHigh = 0x0000;
+	sFilterConfig.FilterMaskIdLow = 0x0000;
+	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	sFilterConfig.SlaveStartFilterBank = 14;
+	HAL_CAN_ConfigFilter(&hcan2,&sFilterConfig);
+	
+	/*启动CAN*/
+	HAL_CAN_Start(&hcan2);
+	/*开启CAN中断*/
+	HAL_CAN_ActivateNotification(&hcan2,CAN_IT_RX_FIFO0_MSG_PENDING);
 
   /* USER CODE END CAN2_Init 2 */
 
@@ -261,7 +276,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 			CAN_RxHeaderTypeDef Rx;
 			uint8_t CAN_data[8];
 			HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &Rx, CAN_data);
-			if (Rx.StdId == 0x13)
+			if (Rx.StdId == 0xFF)
 			{
 				;
 			}
@@ -271,9 +286,11 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 			CAN_RxHeaderTypeDef Rx;
 			uint8_t CAN_data[8];
 			HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &Rx, CAN_data);
+			if (Rx.StdId == 0x13)
+			{
+				;
+			}
 		}
-
-   
 }
 
 /* USER CODE END 1 */
