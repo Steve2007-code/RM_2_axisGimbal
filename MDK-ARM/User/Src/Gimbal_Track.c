@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 #include "Gimbal_Track.h"
 #include "UART_Data.h"
 #include "DM_BLDC_Motor.h"
@@ -119,11 +120,26 @@
 /*-------------------------- 像素pid追踪目标--------------------------------*/
 
 /*云台稳定PID数据结构体定义*/
-PID_t Gimbal_track_PID_Data = {
+//俯仰
+PID_t Gimbal_track_PID_X_Data = {
 	.Target = 0,
 	
 	.Kp = 9.0f,
-	.Ki = 0.5f,
+	.Ki = 0.3f,
+	.Kd = 2.0f,
+	
+	.OutMax = 2.5,
+	.OutMin = -2.5,
+	
+	.KiMax = 100,
+	.KiMin = -100,
+};
+//偏航
+PID_t Gimbal_track_PID_Y_Data =  {
+	.Target = 0,
+	
+	.Kp = 8.0f,
+	.Ki = 0.4f,
 	.Kd = 2.0f,
 	
 	.OutMax = 2.5,
@@ -134,21 +150,27 @@ PID_t Gimbal_track_PID_Data = {
 };
 
 /**
-  * @brief  云台稳定算法
+  * @brief  云台俯仰单独的稳定算法
   * @param  *ax PID_t类型结构体 x_raw x(俯仰)轴稳定角度 y_raw y(横滚)轴稳定角度
   * @note		无
   * @retval 无
   */
-void Gimbal_Track_PID(PID_t *ax, float x_raw, float y_raw)
+void Gimbal_Track_PID_X(PID_t *ax, float x_raw)
 {
 	ax ->Target = x_raw;
 	
 	Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Euler_angle_data);
+	Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Angular_velocity_data);
+	
 	ax ->Actual = DM_Motor_IMU_StructData.Euler_f_roll * PI / 180.0f;
+	float Feedforward_K = 0.03f;//角速度前馈增益
+	float PID_Gyro_f_raw[3];
+	memcpy(PID_Gyro_f_raw, DM_Motor_IMU_StructData.Gyro_f_raw, sizeof(PID_Gyro_f_raw));
+	float Dist_Feedforward = -PID_Gyro_f_raw[0] * Feedforward_K;
 	
 	PID_Update(ax);
 	
-	DM_Motor_4310_StructData.Position =ax ->Out;
+	DM_Motor_4310_StructData.Position =ax ->Out + Dist_Feedforward;
 	
 	DM_CAN_Motor_MIT(&DM_Motor_4310_StructData, 
 										DM_Motor_4310_StructData.Velocity,
@@ -156,6 +178,37 @@ void Gimbal_Track_PID(PID_t *ax, float x_raw, float y_raw)
 										DM_Motor_4310_StructData.Kp,
 										DM_Motor_4310_StructData.Kd,
 										DM_Motor_4310_StructData.Torque);
+}
+
+/**
+  * @brief  云台偏航单独的稳定算法
+  * @param  *ay PID_t类型结构体 x_raw x(俯仰)轴稳定角度 y_raw y(横滚)轴稳定角度
+  * @note		无
+  * @retval 无
+  */
+void Gimbal_Track_PID_Y(PID_t *ay, float y_raw)
+{
+	ay ->Target = y_raw;
+	
+	Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Euler_angle_data);
+	Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Angular_velocity_data);
+	
+	ay ->Actual = DM_Motor_IMU_StructData.Euler_f_yaw * PI / 180.0f;
+	float Feedforward_K = 0.03f;//角速度前馈增益
+	float PID_Gyro_f_raw[3];
+	memcpy(PID_Gyro_f_raw, DM_Motor_IMU_StructData.Gyro_f_raw, sizeof(PID_Gyro_f_raw));
+	float Dist_Feedforward = -PID_Gyro_f_raw[2] * Feedforward_K;
+	
+	PID_Update(ay);
+	
+	DM_Motor_4340_StructData.Position =ay ->Out + Dist_Feedforward;
+	
+	DM_CAN_Motor_MIT(&DM_Motor_4340_StructData, 
+										DM_Motor_4340_StructData.Velocity,
+										DM_Motor_4340_StructData.Position,
+										DM_Motor_4340_StructData.Kp,
+										DM_Motor_4340_StructData.Kd,
+										DM_Motor_4340_StructData.Torque);
 }
 
 

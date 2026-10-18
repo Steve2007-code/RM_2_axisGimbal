@@ -152,9 +152,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>164</LineNumber>
+          <LineNumber>166</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134221190</Address>
+          <Address>134221166</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -163,12 +163,28 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\User\Src\Gimbal_Track.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\zero_program\User/Src/Gimbal_Track.c\164</Expression>
+          <Expression>\\zero_program\User/Src/Gimbal_Track.c\166</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>159</LineNumber>
+          <LineNumber>212</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>.\User\Src\Gimbal_Track.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>213</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>0</Address>
           <ByteObject>0</ByteObject>
@@ -217,6 +233,11 @@
           <count>6</count>
           <WinNumber>1</WinNumber>
           <ItemText>Gimbal_track_PID_Data</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>DM_Motor_IMU_StructData.Gyro_f_raw</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

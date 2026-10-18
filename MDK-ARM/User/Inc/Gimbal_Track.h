@@ -15,9 +15,13 @@
 /*-------------------------- 像素pid追踪目标--------------------------------*/
 
 /*云台稳定PID数据结构体外部声明*/
-extern PID_t Gimbal_track_PID_Data;
+extern PID_t Gimbal_track_PID_X_Data;
+extern PID_t Gimbal_track_PID_Y_Data;
 
-//云台稳定算法
-void Gimbal_Track_PID(PID_t *ax, float x_raw, float y_raw);
+//云台俯仰单独的稳定算法
+void Gimbal_Track_PID(PID_t *ax, PID_t *ay, float x_raw, float y_raw);
+//云台偏航单独的稳定算法
+void Gimbal_Track_PID_X(PID_t *ax, float x_raw);
+void Gimbal_Track_PID_Y(PID_t *ay, float y_raw);
 
 #endif

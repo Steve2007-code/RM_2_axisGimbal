@@ -115,13 +115,18 @@ int main(void)
 	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Disable);
 	HAL_Delay(1000);
 	DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Enable);
-	//DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Enable);
+	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Enable);
 	
   while (1)
   {
-		printf("%f\n",DM_Motor_IMU_StructData.Euler_f_roll);
-		Gimbal_Track_PID(&Gimbal_track_PID_Data, 0, 0);
-		HAL_Delay(5);
+		printf("%f, %f, %f, %f, %f, %f\n",DM_Motor_IMU_StructData.Euler_f_roll,
+																DM_Motor_IMU_StructData.Euler_f_yaw,
+																DM_Motor_IMU_StructData.Euler_f_pitch,
+																DM_Motor_IMU_StructData.Gyro_f_raw[0],
+																DM_Motor_IMU_StructData.Gyro_f_raw[1],
+																DM_Motor_IMU_StructData.Gyro_f_raw[2]);
+		Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, 0);
+		Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, 0);
 		
 		
 //		for(float i = 0;i < 3; i += 0.01)
