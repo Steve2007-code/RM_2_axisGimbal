@@ -21,6 +21,8 @@
 #include "can.h"
 
 /* USER CODE BEGIN 0 */
+#include <string.h>
+#include "DM_IMU_L1_V1.0.h"
 
 /* USER CODE END 0 */
 
@@ -288,7 +290,23 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 			HAL_CAN_GetRxMessage(hcan, CAN_RX_FIFO0, &Rx, CAN_data);
 			if (Rx.StdId == 0x13)
 			{
-				;
+				IMU_UpdateData(CAN_data);
+//				if(CAN_data[0] == 0x01)
+//				{
+//					memcpy(DM_Motor_IMU_StructData.acc_raw, CAN_data, 8);
+//				}
+//				else if(CAN_data[0] == 0x02)
+//				{
+//					memcpy(DM_Motor_IMU_StructData.Gyro_raw, CAN_data, 8);
+//				}
+//				else if(CAN_data[0] == 0x03)
+//				{
+//					memcpy(DM_Motor_IMU_StructData.Euler_raw, CAN_data, 8);
+//				}
+//				else if(CAN_data[0] == 0x04)
+//				{
+//					memcpy(DM_Motor_IMU_StructData.Quaternion, CAN_data, 8);
+//				}
 			}
 		}
 }

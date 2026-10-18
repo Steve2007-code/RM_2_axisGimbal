@@ -124,3 +124,15 @@ HAL_StatusTypeDef UART_Send_UART6_To_UART1(void)
     if (n == 0) return HAL_TIMEOUT;
     return UART_Send_NonBlock(&huart1, UART6_To_UART1_Buf, n);
 }
+
+/**
+  * @brief	重定向printf
+  * @param	保持原始格式即可，无需变动
+  * @retval	保持原始格式即可，无需变动
+  */
+int fputc(int ch, FILE *f)
+{
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+  return ch;
+}
+

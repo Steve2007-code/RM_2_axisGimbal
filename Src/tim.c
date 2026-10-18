@@ -113,21 +113,23 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 /*定时器中断函数*/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  if(htim->Instance == TIM1)
-  {
-    if(Frame_OK)
-		{
-			Gimbal_Track_PID();
-		}
-		if(Frame_OK)
-		{
-			Gimbal_Track_PID();
-		}
-		else if(lost_cnt > 3)          /* 约 3ms 没数据 */
-		{
-			DM_CAN_Motor_Velocity_Rad(&DM_Motor_4340_StructData, 0.0f);   /* 刹车 */
-		}
-  }
+/*-------------------------- 像素pid追踪目标--------------------------------*/
+//  if(htim->Instance == TIM1)
+//  {
+//    if(Frame_OK)
+//		{
+//			Gimbal_Track_PID();
+//		}
+//		if(Frame_OK)
+//		{
+//			Gimbal_Track_PID();
+//		}
+//		else if(lost_cnt > 3)          /* 约 3ms 没数据 */
+//		{
+//			DM_CAN_Motor_Velocity_Rad(&DM_Motor_4340_StructData, 0.0f);   /* 刹车 */
+//		}
+//  }
+/*-------------------------- 像素pid追踪目标--------------------------------*/
 }
 
 /* USER CODE END 1 */

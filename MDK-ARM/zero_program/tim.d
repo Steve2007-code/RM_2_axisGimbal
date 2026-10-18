@@ -34,4 +34,5 @@ zero_program\tim.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 zero_program\tim.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 zero_program\tim.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 zero_program\tim.o: ./User/Inc/Gimbal_Track.h
+zero_program\tim.o: ./User/Inc/PID.h
 zero_program\tim.o: ./User/Inc/DM_BLDC_Motor.h

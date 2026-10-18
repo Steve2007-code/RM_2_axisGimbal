@@ -26,6 +26,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <math.h>
+#include <stdio.h>
 #include "DM_BLDC_Motor.h"
 #include "UART_Data.h"
 #include "Gimbal_Track.h"
@@ -103,6 +105,7 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim1);
 	DM_CAN_Motor_Init();
 	UART_Init();
+	DM_IMU_Init();
 
   /* USER CODE END 2 */
 
@@ -112,13 +115,25 @@ int main(void)
 	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Disable);
 	HAL_Delay(1000);
 	DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Enable);
-	DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Enable);
+	//DM_CAN_Motor_SetEnable(DM_Motor_4340_ID,DM_Mototr_Enable);
 	
   while (1)
   {
-		//UART6_Data_Frame();
-		Red_DM_IMU_Data();
-		HAL_Delay(50);
+		printf("%f\n",DM_Motor_IMU_StructData.Euler_f_roll);
+		Gimbal_Track_PID(&Gimbal_track_PID_Data, 0, 0);
+		HAL_Delay(5);
+		
+		
+//		for(float i = 0;i < 3; i += 0.01)
+//		{
+//			DM_CAN_Motor_MIT(&DM_Motor_4310_StructData,2.5,i,5,0.2,0);
+//			HAL_Delay(5);
+//		}
+//		for(float i = 3;i >= 0; i -= 0.01)
+//		{
+//			DM_CAN_Motor_MIT(&DM_Motor_4310_StructData,2.5,i,5,0.2,0);
+//			HAL_Delay(5);
+//		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

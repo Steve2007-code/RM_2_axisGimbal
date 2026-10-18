@@ -36,7 +36,12 @@ zero_program\main.o: ../Inc/can.h
 zero_program\main.o: ../Inc/tim.h
 zero_program\main.o: ../Inc/usart.h
 zero_program\main.o: ../Inc/gpio.h
+zero_program\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+zero_program\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 zero_program\main.o: ./User/Inc/DM_BLDC_Motor.h
 zero_program\main.o: ./User/Inc/UART_Data.h
+zero_program\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 zero_program\main.o: ./User/Inc/Gimbal_Track.h
+zero_program\main.o: ./User/Inc/PID.h
 zero_program\main.o: ./User/Inc/DM_IMU_L1_V1.0.h
+zero_program\main.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

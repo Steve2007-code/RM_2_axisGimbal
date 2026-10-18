@@ -622,6 +622,11 @@
               <FileType>5</FileType>
               <FilePath>.\User\Inc\DM_IMU_L1_V1.0.h</FilePath>
             </File>
+            <File>
+              <FileName>PID.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\Inc\PID.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -651,6 +656,11 @@
               <FileName>DM_IMU_L1_V1.0.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\Src\DM_IMU_L1_V1.0.c</FilePath>
+            </File>
+            <File>
+              <FileName>PID.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Src\PID.c</FilePath>
             </File>
           </Files>
         </Group>

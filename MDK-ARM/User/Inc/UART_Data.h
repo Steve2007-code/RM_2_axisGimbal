@@ -3,6 +3,8 @@
 
 #include "main.h"
 #include "usart.h"
+#include <stdio.h>
+#include <stdarg.h>
 
 /*外部变量声明*/
 extern volatile  uint8_t UART1_TX_Buf[64];//发送缓冲区

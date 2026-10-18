@@ -33,4 +33,5 @@ zero_program\dm_imu_l1_v1.0.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal
 zero_program\dm_imu_l1_v1.0.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 zero_program\dm_imu_l1_v1.0.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 zero_program\dm_imu_l1_v1.0.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+zero_program\dm_imu_l1_v1.0.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 zero_program\dm_imu_l1_v1.0.o: ../Inc/can.h

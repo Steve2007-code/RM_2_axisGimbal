@@ -45,14 +45,14 @@ void DM_CAN_Motor_Init(void)
 	DM_Motor_4340_StructData.Kp_max = 500;
 	DM_Motor_4340_StructData.Kp_min = 0;
 	DM_Motor_4340_StructData.Position = 0;
-	DM_Motor_4340_StructData.Position_max = 1000;
-	DM_Motor_4340_StructData.Position_min = -1000;
+	DM_Motor_4340_StructData.Position_max = 12.5;
+	DM_Motor_4340_StructData.Position_min = -12.5;
 	DM_Motor_4340_StructData.Torque = 0;
-	DM_Motor_4340_StructData.Torque_max = 28;
-	DM_Motor_4340_StructData.Torque_min = -28;
+	DM_Motor_4340_StructData.Torque_max = 10;
+	DM_Motor_4340_StructData.Torque_min = -10;
 	DM_Motor_4340_StructData.Velocity = 0;
-	DM_Motor_4340_StructData.Velocity_max = 10;
-	DM_Motor_4340_StructData.Velocity_min = -10;
+	DM_Motor_4340_StructData.Velocity_max = 30;
+	DM_Motor_4340_StructData.Velocity_min = -30;
 }
 
 /*
@@ -82,6 +82,7 @@ HAL_StatusTypeDef DM_CAN_Motor_SetEnable(uint16_t id, uint8_t *data)
 	{
 		return CAN_Send_Data_Frame(&hcan1, id, DM_Mototr_Disable, 8);
 	}
+	return HAL_ERROR;
 }
 
 /*
@@ -202,3 +203,38 @@ HAL_StatusTypeDef DM_CAN_Motor_Velocity_Rad(DM_Motor_Data *ax, float vel)
 	return CAN_Send_Data_Frame(ax->hcan, ax->ID, Data, 8);
 }
 
+
+/*
+  * @brief  CAN发送电机MIT
+  * @param  ax 电机结构体指针 vel 目标角速度 pos 电机位置 - kp - ki - kd - tor 转矩
+  * @note		无
+  * @retval HAL返回的CAN发送状态
+  */
+HAL_StatusTypeDef DM_CAN_Motor_MIT(DM_Motor_Data *ax, float vel, float pos, float kp, float kd, float tor)
+{
+	uint8_t  Data[8] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	uint16_t Position_raw, Velocity_raw, Kp_raw, Kd_raw, Torque_raw;
+
+	ax->Velocity = vel;//速度
+	ax->Position = pos;//位置
+	ax->Torque = tor;//转矩
+	ax->Kp = kp;
+	ax->Kd = kd;
+
+	Position_raw = DM_Motor_16_Data_Frame(ax->Position, ax->Position_min, ax->Position_max);
+	Velocity_raw = DM_Motor_12_Data_Frame(ax->Velocity, ax->Velocity_min, ax->Velocity_max);
+	Kp_raw = DM_Motor_12_Data_Frame(ax->Kp, ax->Kp_min, ax->Kp_max);
+	Kd_raw = DM_Motor_12_Data_Frame(ax->Kd, ax->Kd_min, ax->Kd_max);
+	Torque_raw = DM_Motor_12_Data_Frame(ax->Torque, ax->Torque_min, ax->Torque_max);
+
+	Data[0] = (uint8_t)(Position_raw >> 8);
+	Data[1] = (uint8_t)(Position_raw & 0xFF);
+	Data[2] = (uint8_t)(Velocity_raw >> 4);
+	Data[3] = (uint8_t)(((Velocity_raw & 0x0F) << 4) | (Kp_raw >> 8));
+	Data[4] = (uint8_t)(Kp_raw & 0xFF);
+	Data[5] = (uint8_t)(Kd_raw >> 4);
+	Data[6] = (uint8_t)(((Kd_raw & 0x0F) << 4) | (Torque_raw >> 8));
+	Data[7] = (uint8_t)(Torque_raw & 0xFF);
+
+	return CAN_Send_Data_Frame(ax->hcan, ax->ID, Data, 8);
+}

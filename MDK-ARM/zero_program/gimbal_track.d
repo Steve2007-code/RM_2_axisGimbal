@@ -1,4 +1,6 @@
 zero_program\gimbal_track.o: User\Src\Gimbal_Track.c
+zero_program\gimbal_track.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+zero_program\gimbal_track.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 zero_program\gimbal_track.o: ./User/Inc/Gimbal_Track.h
 zero_program\gimbal_track.o: ../Inc/main.h
 zero_program\gimbal_track.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
@@ -33,7 +35,10 @@ zero_program\gimbal_track.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_p
 zero_program\gimbal_track.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 zero_program\gimbal_track.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 zero_program\gimbal_track.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+zero_program\gimbal_track.o: ./User/Inc/PID.h
 zero_program\gimbal_track.o: ./User/Inc/UART_Data.h
 zero_program\gimbal_track.o: ../Inc/usart.h
+zero_program\gimbal_track.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 zero_program\gimbal_track.o: ./User/Inc/DM_BLDC_Motor.h
-zero_program\gimbal_track.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+zero_program\gimbal_track.o: ./User/Inc/DM_IMU_L1_V1.0.h
+zero_program\gimbal_track.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

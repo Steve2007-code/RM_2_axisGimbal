@@ -2,6 +2,7 @@
 #define __DM_IMU_L1_V1_0_H__
 
 #include "main.h"
+#include <string.h>
 
 /*-------------------------------------------帧定义------------------------------------------//
 请求帧格式
@@ -46,15 +47,50 @@ CAN通信下的数据帧格式查看《达妙科技DM-IMU-L1六轴IMU模块使用说明书V1.2》
 #define Save_parameters 0xFE														//保存参数  W
 #define factory_data_reset 0xFF													//恢复出厂设置  W
 
+//------------------------------线性映射表------------------------------//
+#define ACCEL_CAN_MAX 235.2f
+#define ACCEL_CAN_MIN -235.2f
+#define GYRO_CAN_MAX 34.88f
+#define GYRO_CAN_MIN -34.88f
+#define PITCH_CAN_MAX 90.0f
+#define PITCH_CAN_MIN -90.0f
+#define ROLL_CAN_MAX 180.0f
+#define ROLL_CAN_MIN -180.0f
+#define YAW_CAN_MAX 180.0f
+#define YAW_CAN_MIN -180.0f
+#define Quaternion_CAN_MIN -1.0f
+#define Quaternion_CAN_MAX 1.0f
+
 
 typedef struct
 {
-	int16_t acc_raw[3];//加速度数据
-	int16_t  Gyro_raw[3];//角速度数据
-	int16_t  Pitch[3];//欧拉角数据
-	int16_t  Quaternion[3];//四元数数据
+	CAN_HandleTypeDef *hcan;  //电机所接的CAN线
+	uint16_t ID;							//电机ID
+	uint8_t acc_raw[8];				//加速度原始数据
+	uint8_t Gyro_raw[8];			//角速度原始数据
+	uint8_t Euler_raw[8];			//欧拉角原始数据
+	uint8_t Quaternion[8];		//四元数原始数据
+	float acc_f_raw[3];				//加速度浮点数据
+	float Gyro_f_raw[3];			//角速度浮点数据
+	float Euler_f_pitch;			//欧拉角浮点数据 y
+	float Euler_f_yaw;				//欧拉角浮点数据 z
+	float Euler_f_roll;				//欧拉角浮点数据 x
+	float Quaternion_f[4];		//四元数浮点数据
 }DM_IMU_Data;
 
+extern DM_IMU_Data DM_Motor_IMU_StructData;//达妙参数定义结构体
+
+#define DM_Motor_IMU_ID 0x03 //IMUID
+
+
+/*----------外部可调用函数声明----------*/
+//达妙IMU初始化
+void DM_IMU_Init(void);
+//读取加速度数据
 HAL_StatusTypeDef Red_DM_IMU_Data(void);
+//读取IMU加速度/角速度/欧拉角/四元数数据
+HAL_StatusTypeDef Red_DM_IMU_raw(DM_IMU_Data *ax, uint8_t Data);
+//将CAN发来的原始角度数据转换位浮点数
+void IMU_UpdateData(uint8_t* pData);
 
 #endif

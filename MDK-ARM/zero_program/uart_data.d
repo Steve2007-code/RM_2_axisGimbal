@@ -34,3 +34,5 @@ zero_program\uart_data.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.
 zero_program\uart_data.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 zero_program\uart_data.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 zero_program\uart_data.o: ../Inc/usart.h
+zero_program\uart_data.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+zero_program\uart_data.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
