@@ -1,3 +1,4 @@
+#include <string.h>
 #include "DM_BLDC_Motor.h"
 #include "can.h"
 
@@ -35,6 +36,8 @@ void DM_CAN_Motor_Init(void)
 	DM_Motor_4310_StructData.Velocity = 0;
 	DM_Motor_4310_StructData.Velocity_max = 30;
 	DM_Motor_4310_StructData.Velocity_min = -30;
+	
+	DM_Motor_4310_StructData.BackID = DM_Motor_4310_BackID;
 	/*4340数据初始化*/
 	DM_Motor_4340_StructData.hcan = &hcan1;
 	DM_Motor_4340_StructData.ID = DM_Motor_4340_ID;
@@ -53,6 +56,8 @@ void DM_CAN_Motor_Init(void)
 	DM_Motor_4340_StructData.Velocity = 0;
 	DM_Motor_4340_StructData.Velocity_max = 30;
 	DM_Motor_4340_StructData.Velocity_min = -30;
+	
+	DM_Motor_4340_StructData.BackID = DM_Motor_4340_BackID;
 }
 
 /*
@@ -237,4 +242,43 @@ HAL_StatusTypeDef DM_CAN_Motor_MIT(DM_Motor_Data *ax, float vel, float pos, floa
 	Data[7] = (uint8_t)(Torque_raw & 0xFF);
 
 	return CAN_Send_Data_Frame(ax->hcan, ax->ID, Data, 8);
+}
+
+/**
+  * @brief  4310电机回传数据解析
+  * @param  *ax IMU数据结构体
+  * @note		无
+  * @retval 无
+  */
+void DM_IMU_Update4310(DM_Motor_Data *pData)
+{
+	pData ->ID_or_ERR = pData ->UpData[0];
+}
+
+/**
+  * @brief  解收电机数据解析分配函数
+  * @param  *pData CAN接收到的数据
+  * @note		无
+  * @retval 无
+  */
+void Motor_UpdateData(uint8_t* pData, uint8_t Back_ID)
+{
+	if(Back_ID == DM_Motor_4310_ID)
+	{
+		switch(pData[0])
+		{
+			case DM_Motor_4310_ID:
+				memcpy(DM_Motor_4310_StructData.UpData, pData, 8);
+				//DM_IMU_UpdateAccel(&DM_Motor_IMU_StructData);
+				break;
+			case DM_Motor_4340_ID:
+				memcpy(DM_Motor_4340_StructData.UpData, pData, 8);
+				//DM_IMU_UpdateAccel(&DM_Motor_IMU_StructData);
+				break;
+		}
+	}
+	else if(Back_ID == DM_Motor_4340_ID)
+	{
+		;
+	}
 }

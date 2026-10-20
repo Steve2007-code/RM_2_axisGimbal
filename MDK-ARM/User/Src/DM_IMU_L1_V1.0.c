@@ -119,19 +119,19 @@ void IMU_UpdateData(uint8_t* pData)
 {
 	switch(pData[0])
 	{
-		case 1:
+		case Acceleration_data/* 0x01 */:
 			memcpy(DM_Motor_IMU_StructData.acc_raw, pData, 8);
       DM_IMU_UpdateAccel(&DM_Motor_IMU_StructData);
 			break;
-		case 2:
+		case Angular_velocity_data/* 0x02 */:
 			memcpy(DM_Motor_IMU_StructData.Gyro_raw, pData, 8);
       DM_IMU_UpdateGyro(&DM_Motor_IMU_StructData);
 			break;
-		case 3:
+		case Euler_angle_data/* 0x03 */:
 			memcpy(DM_Motor_IMU_StructData.Euler_raw, pData, 8);
       DM_IMU_UpdateEuler(&DM_Motor_IMU_StructData);
 			break;
-		case 4:
+		case Quaternion_data/* 0x04 */:
 			 memcpy(DM_Motor_IMU_StructData.Quaternion, pData, 8);
        DM_IMU_UpdateQuaternion(&DM_Motor_IMU_StructData);
 			break;
@@ -149,6 +149,7 @@ void DM_IMU_Init(void)
 {
 	DM_Motor_IMU_StructData.hcan = &hcan2;
 	DM_Motor_IMU_StructData.ID = DM_Motor_IMU_ID;
+	DM_Motor_IMU_StructData.BackID = DM_Motor_IMU_BackID;
 }
 
 /**

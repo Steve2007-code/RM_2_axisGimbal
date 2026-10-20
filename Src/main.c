@@ -119,14 +119,20 @@ int main(void)
 	
   while (1)
   {
-		printf("%f, %f, %f, %f, %f, %f\n",DM_Motor_IMU_StructData.Euler_f_roll,
+//		DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Disable);
+//		HAL_Delay(50);
+		
+		printf("%f, %f, %f, %f, %f, %f, %f, %f, %f\n",DM_Motor_IMU_StructData.Euler_f_roll,
 																DM_Motor_IMU_StructData.Euler_f_yaw,
 																DM_Motor_IMU_StructData.Euler_f_pitch,
 																DM_Motor_IMU_StructData.Gyro_f_raw[0],
 																DM_Motor_IMU_StructData.Gyro_f_raw[1],
-																DM_Motor_IMU_StructData.Gyro_f_raw[2]);
-		Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, 0);
-		Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, 0);
+																DM_Motor_IMU_StructData.Gyro_f_raw[2],
+																flag,
+																out1,
+																out2);
+			Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, 0);
+			Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, 0);
 		
 		
 //		for(float i = 0;i < 3; i += 0.01)

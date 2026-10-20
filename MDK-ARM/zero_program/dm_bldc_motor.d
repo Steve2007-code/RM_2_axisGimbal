@@ -1,4 +1,5 @@
 zero_program\dm_bldc_motor.o: User\Src\DM_BLDC_Motor.c
+zero_program\dm_bldc_motor.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 zero_program\dm_bldc_motor.o: ./User/Inc/DM_BLDC_Motor.h
 zero_program\dm_bldc_motor.o: ../Inc/main.h
 zero_program\dm_bldc_motor.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h

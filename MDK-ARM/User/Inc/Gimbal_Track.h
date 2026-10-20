@@ -14,6 +14,10 @@
 //void Gimbal_Track_PID(void);/*云台双轴PID计算*/
 /*-------------------------- 像素pid追踪目标--------------------------------*/
 
+extern float flag;
+extern float out1;
+extern float out2;
+
 /*云台稳定PID数据结构体外部声明*/
 extern PID_t Gimbal_track_PID_X_Data;
 extern PID_t Gimbal_track_PID_Y_Data;

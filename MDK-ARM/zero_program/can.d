@@ -35,3 +35,4 @@ zero_program\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 zero_program\can.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 zero_program\can.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 zero_program\can.o: ./User/Inc/DM_IMU_L1_V1.0.h
+zero_program\can.o: ./User/Inc/DM_BLDC_Motor.h

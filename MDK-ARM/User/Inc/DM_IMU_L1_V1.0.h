@@ -64,8 +64,9 @@ CAN通信下的数据帧格式查看《达妙科技DM-IMU-L1六轴IMU模块使用说明书V1.2》
 
 typedef struct
 {
-	CAN_HandleTypeDef *hcan;  //电机所接的CAN线
-	uint16_t ID;							//电机ID
+	CAN_HandleTypeDef *hcan;  //IMU所接的CAN线
+	uint16_t ID;							//IMU ID
+	uint16_t BackID;					//IMU回传ID
 	uint8_t acc_raw[8];				//加速度原始数据
 	uint8_t Gyro_raw[8];			//角速度原始数据
 	uint8_t Euler_raw[8];			//欧拉角原始数据
@@ -81,6 +82,7 @@ typedef struct
 extern DM_IMU_Data DM_Motor_IMU_StructData;//达妙参数定义结构体
 
 #define DM_Motor_IMU_ID 0x03 //IMUID
+#define DM_Motor_IMU_BackID 0x13 //IMUID
 
 
 /*----------外部可调用函数声明----------*/
