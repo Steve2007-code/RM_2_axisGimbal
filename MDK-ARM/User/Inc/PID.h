@@ -22,6 +22,13 @@ typedef struct {
 	float KiMin;//Ki最小限幅
 } PID_t;
 
+typedef struct {
+	float x_raw;//x还差的角度
+	float y_raw;//y还差的角度
+	float Distance;//目标距离
+	uint8_t lost;//1 = 未检测到方块
+} Came_Data;
+
 /*外部可调用函数声明*/
 void PID_Update(PID_t *p);
 

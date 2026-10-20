@@ -157,6 +157,13 @@ PID_t Gimbal_track_PID_Y_Data =  {
 	.KiMin = -100,
 };
 
+/*摄像机传来偏转数据结构体*/
+Came_Data Gimbal_track_Came_Data = {
+	.Distance = 0.0f,
+	.x_raw = 0.0f,
+	.y_raw = 0.0f,
+};
+
 /**
   * @brief  云台俯仰单独的稳定算法
   * @param  *ax PID_t类型结构体 x_raw x(俯仰)轴稳定角度
@@ -197,7 +204,7 @@ void Gimbal_Track_PID_X(PID_t *ax, float x_raw)
 void Gimbal_Track_PID_Y(PID_t * ay, float y_raw)
 {
 	ay ->Target = y_raw;
-	static float Old_Out = 0.0f;
+	//static float Old_Out = 0.0f;
 	
 	Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Euler_angle_data);
 	Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Angular_velocity_data);
@@ -223,6 +230,131 @@ void Gimbal_Track_PID_Y(PID_t * ay, float y_raw)
 											DM_Motor_4340_StructData.Kd,
 											DM_Motor_4340_StructData.Torque);
 }
+
+///////////////////////////////////////////////////////////////////////
+/**
+  * @brief  从 buf 的 *pos 位置开始解析一个有符号十进制整数
+  * @param  *buf 包尾 len 长度 *pos 包内位置
+  * @note		遇到非数字字符停止，并把 *pos 推进到停止位置
+  * @retval 解析失败返回 0
+  */
+static int32_t parse_i32(const uint8_t *buf, uint16_t len, uint16_t *pos)
+{
+    int32_t sign = 1;
+    int32_t val  = 0;
+
+    if (*pos >= len) return 0;
+
+    /* 处理正负号 */
+    if (buf[*pos] == '-')      { sign = -1; (*pos)++; }
+    else if (buf[*pos] == '+') { (*pos)++; }
+
+    /* 逐位累加，直到遇到非数字 */
+    while (*pos < len && buf[*pos] >= '0' && buf[*pos] <= '9') {
+        val = val * 10 + (buf[*pos] - '0');
+        (*pos)++;
+    }
+
+    return sign * val;
+}
+///////////////////////////////////////////////////////////////////////
+/**
+  * @brief  串口接收角度数据控制电机
+  * @param  *huart 串口句柄（建议为串口6）
+  * @note		无
+  * @retval 无
+  */
+uint8_t UART1_IMU_AND_Motor[20];
+
+#define CAM_LINE_MAX 32
+
+void UART_IMU_AND_Motor(UART_HandleTypeDef *huart)
+{
+    static uint8_t  line[CAM_LINE_MAX];
+    static uint16_t line_len = 0;
+    static uint16_t rd = 0;
+    (void)huart;
+
+    while (rd != UART6_RX_idx)/* 把所有新字节消费完 */
+    {
+        uint8_t c = UART6_RX_Fifo[rd];
+        rd = (rd + 1) % 128;
+
+        if (c == '\n' || c == '\r')
+        {
+            if (line_len >= 3)
+            {
+                if (line[0]=='Y' && line[1]=='S' && line[2]=='A')
+                {
+                    uint16_t pos = 4;/* 跳过 "YSA," */
+                    int32_t ax  = parse_i32(line, line_len, &pos);
+                    if (pos < line_len && line[pos]==',') pos++;
+                    int32_t ay  = parse_i32(line, line_len, &pos);
+                    if (pos < line_len && line[pos]==',') pos++;
+                    int32_t dis = parse_i32(line, line_len, &pos);
+
+                    Gimbal_track_Came_Data.x_raw    = ax  * 0.001f;/* mrad → rad */
+                    Gimbal_track_Came_Data.y_raw    = ay  * 0.001f;
+                    Gimbal_track_Came_Data.Distance = (float)dis;/* mm，按需 /1000 变 m */
+                    Gimbal_track_Came_Data.lost     = 0;
+                }
+                else if (line[0]=='Y' && line[1]=='S' && line[2]=='L')
+                {
+                    Gimbal_track_Came_Data.lost = 1;/* 目标丢失，上层决定回中/保持 */
+                }
+            }
+            line_len = 0;
+        }
+        else
+        {
+            if (line_len < CAM_LINE_MAX - 1) line[line_len++] = c;
+            else line_len = 0;/* 超长丢弃，重新同步 */
+        }
+    }
+}
+///////////////////////////////////////////////////////////////////////
+
+//uint8_t UART1_IMU_AND_Motor[20];
+//float x_raw = 0.0f, y_raw = 0.0f;
+
+//void UART_IMU_AND_Motor(UART_HandleTypeDef *huart)
+//{
+//	uint16_t flag1 = 0;//定义的读数据包包头标志
+//	uint16_t flag2 = 0;//定义的读数据包包尾标志
+//	UART6_RX_Rd = UART6_RX_idx;//从最后一个写入的字节开始往前读
+//  while (UART6_RX_idx > 10) 
+//	{ 
+//		if(UART6_RX_Fifo[UART6_RX_Rd] != '\n')
+//		{
+//			 for(uint8_t i = UART6_RX_Rd; i < 20; i--)
+//			 {
+//				 if(UART6_RX_Fifo[i] == '\n')
+//				 {
+//					 flag1 = i;
+//					 break;
+//				 }
+//			 }
+//			 for(uint8_t i = 0; i < 20; i++)
+//			 {
+//				 if(UART6_RX_Fifo[flag1 - i] == 0x41)
+//				 {
+//						if(UART6_RX_Fifo[flag1 - i+1] == 0x53)
+//						{
+//							if(UART6_RX_Fifo[flag1 - i+2] == 0x59)
+//							{
+//								uint8_t i1 = 0;
+//								for(flag2 = (flag1 - i + 2); flag2 != flag1; flag2++)
+//								{
+//									UART1_IMU_AND_Motor[i1] = UART6_RX_Fifo[flag2];
+//									i1++;
+//								}
+//							}
+//						}
+//				 }
+//			 }
+//		}
+//	}
+//}
 
 
 

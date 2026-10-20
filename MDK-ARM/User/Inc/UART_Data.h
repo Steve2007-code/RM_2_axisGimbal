@@ -17,7 +17,7 @@ extern uint8_t UART1_TX_Busy;//串口1发送忙标志
 extern volatile uint8_t UART6_TX_BBuf[64];//发送缓冲区
 extern uint8_t UART6_RX_Buf[1];//中断接收单字节临时缓存
 extern volatile uint8_t UART6_RX_Fifo[128];//接收环形 FIFO 缓冲区
-extern volatile uint16_t UART6_RX_idx;//串口6索引
+extern volatile uint16_t UART6_RX_idx;//串口写6索引
 extern volatile uint16_t UART6_RX_Rd;//串口6读索引
 extern uint8_t UART6_TX_Busy;//串口6发送忙标志
 
