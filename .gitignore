@@ -27,3 +27,4 @@ MDK-ARM/DebugConfig/
 *.Bak
 *.bak
 *.tmp
+build_check.log
