@@ -1,7 +1,7 @@
 #include "DM_IMU_L1_V1.0.h"
 #include "can.h"
 
-DM_IMU_Data DM_Motor_IMU_StructData;//达妙参数定义结构体
+DM_IMU_Data DM_Motor_IMU_StructData;//达妙IMU参数定义结构体
 
 /*CAN发送读取IMU数据帧包定义*/
 uint8_t Red_acc_raw[8] = {0xCC, Acceleration_data, 0x00, 0xDD, 0x00, 0x00, 0x00, 0x00};//加速度
@@ -155,7 +155,7 @@ void DM_IMU_Init(void)
 /**
   * @brief  读取IMU加速度/角速度/欧拉角/四元数数据
   * @param  *ax IMU数据结构体 DM_Motor_IMU_StructData - Data 需要获得的角数据值可以是 
-	*	@param	Acceleration_data 加速度 CAN_Send_Data_Frame 角速度
+	*	@param	Acceleration_data 加速度 Angular_velocity_data 角速度
 	*	@param	Euler_angle_data 欧拉角 Quaternion_data 四元数
   * @note   无
   * @retval CAN发送状态
@@ -179,5 +179,32 @@ HAL_StatusTypeDef Red_DM_IMU_raw(DM_IMU_Data *ax, uint8_t Data)
 		return CAN_Send_Data_Frame(ax ->hcan, ax ->ID, Red_Quaternion, 8);
 	}
 	return HAL_ERROR; 
+}
+
+/**
+  * @brief  单次函数一键读取IMU加速度/角速度/欧拉角/四元数数据
+  * @param  无
+  * @note   无
+  * @retval CAN发送状态
+  */
+//读取加速度数据
+HAL_StatusTypeDef Red_DM_IMU_accData(void)
+{
+	return Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Acceleration_data);
+}
+//读取角速度数据
+HAL_StatusTypeDef Red_DM_IMU_GyroData(void)
+{
+	return Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Angular_velocity_data);
+}
+//读取欧拉角数据
+HAL_StatusTypeDef Red_DM_IMU_EulerData(void)
+{
+	return Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Euler_angle_data);
+}
+//读取四元数数据
+HAL_StatusTypeDef Red_DM_IMU_Quaternion(void)
+{
+	return Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Quaternion_data);
 }
 

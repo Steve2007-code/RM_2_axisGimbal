@@ -603,11 +603,6 @@
               <FilePath>.\User\Inc\DM_BLDC_Motor.h</FilePath>
             </File>
             <File>
-              <FileName>DM_IMU_L1.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\User\Inc\DM_IMU_L1.h</FilePath>
-            </File>
-            <File>
               <FileName>UART_Data.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\User\Inc\UART_Data.h</FilePath>
@@ -636,11 +631,6 @@
               <FileName>DM_BLDC_Motor.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\Src\DM_BLDC_Motor.c</FilePath>
-            </File>
-            <File>
-              <FileName>DM_IMU_L1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\Src\DM_IMU_L1.c</FilePath>
             </File>
             <File>
               <FileName>UART_Data.c</FileName>

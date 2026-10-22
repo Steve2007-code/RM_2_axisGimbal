@@ -119,52 +119,16 @@ int main(void)
 	
   while (1)
   {
-//		DM_CAN_Motor_SetEnable(DM_Motor_4310_ID,DM_Mototr_Disable);
-//		HAL_Delay(50);
-		
-		UART_IMU_AND_Motor(&huart6);
-//		Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Euler_angle_data);
-		
-//		Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, 0);
-//		Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, 0);
-		
-//		if(rx_done == 1)
-//		{
-			//printf("%s\n", UART1_IMU_AND_Motor_RData);
-			printf("123%.2f,%.2f,%.2f\n", Gimbal_track_Came_Data.x_raw / 1000,
-																	Gimbal_track_Came_Data.y_raw / 1000,
-																	Gimbal_track_Came_Data.Distance);
-//			rx_done = 0;
-//		}
-		
-		//HAL_Delay(50);
-		//printf("%f,%f,%f\n",Gimbal_track_Came_Data.x_raw,Gimbal_track_Came_Data.y_raw,Gimbal_track_Came_Data.Distance);
-		
-//		printf("%f, %f, %f, %f, %f, %f, %f, %f, %f\n",DM_Motor_IMU_StructData.Euler_f_roll,
-//																DM_Motor_IMU_StructData.Euler_f_yaw,
-//																DM_Motor_IMU_StructData.Euler_f_pitch,
-//																DM_Motor_IMU_StructData.Gyro_f_raw[0],
-//																DM_Motor_IMU_StructData.Gyro_f_raw[1],
-//																DM_Motor_IMU_StructData.Gyro_f_raw[2],
-//																(DM_Motor_IMU_StructData.Euler_f_roll - (Gimbal_track_Came_Data.x_raw / 1000)),
-//																(Gimbal_track_Came_Data.x_raw / 1000.f),
-//																DM_Motor_IMU_StructData.Euler_f_roll);
 
-//			HAL_Delay(200);
-//			printf("hello\r\n");
-			
-		
-		
-//		for(float i = 0;i < 3; i += 0.01)
-//		{
-//			DM_CAN_Motor_MIT(&DM_Motor_4310_StructData,2.5,i,5,0.2,0);
-//			HAL_Delay(5);
-//		}
-//		for(float i = 3;i >= 0; i -= 0.01)
-//		{
-//			DM_CAN_Motor_MIT(&DM_Motor_4310_StructData,2.5,i,5,0.2,0);
-//			HAL_Delay(5);
-//		}
+		UART_IMU_AND_Motor(&huart6);
+		Red_DM_IMU_EulerData();
+
+//		printf("%.4f,%.4f,%.4f\n", Gimbal_track_Came_Data.x_raw / 1000,
+//																	Gimbal_track_Came_Data.y_raw / 1000,
+//																	Gimbal_track_Came_Data.Distance);
+		printf("%.4f,%.4f,%.4f\n", DM_Motor_IMU_StructData.Euler_f_pitch,
+																DM_Motor_IMU_StructData.Euler_f_roll,
+																DM_Motor_IMU_StructData.Euler_f_yaw);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
