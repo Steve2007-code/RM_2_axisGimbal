@@ -21,8 +21,12 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
+#include <math.h>
 #include "Gimbal_Track.h"
 #include "DM_BLDC_Motor.h"
+#include "DM_IMU_L1_V1.0.h"
+#include "main.h"
+#include "UART_Data.h"
 
 /* USER CODE END 0 */
 
@@ -130,6 +134,42 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //		}
 //  }
 /*-------------------------- 像素pid追踪目标--------------------------------*/
+	
+	
+	
+	if(htim->Instance == TIM1)
+	{
+		static uint16_t cnt;
+		cnt++;
+		float error = 0;
+		if(cnt % 5 == 0)
+		{
+			Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Euler_angle_data);
+			Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Angular_velocity_data);
+//			Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, 0);
+//			Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, 0);
+			
+//			if(Gimbal_track_Came_Data.y_raw == 0.0f)
+//			{
+//				Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, Gimbal_track_Came_Data.y_raw / 1000);
+//			}
+//			else
+//			{
+//				error = DM_Motor_IMU_StructData.Euler_f_pitch - (Gimbal_track_Came_Data.y_raw / 1000);
+//				Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, DM_Motor_IMU_StructData.Euler_f_pitch + error);
+//			}
+			
+			if(Gimbal_track_Came_Data.x_raw == 0.0f)
+			{
+				Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, Gimbal_track_Came_Data.x_raw/*摄像机传来的角度数据*/ / 1000);
+			}
+			else
+			{
+				error = DM_Motor_IMU_StructData.Euler_f_roll  / 1000 - (Gimbal_track_Came_Data.x_raw/*摄像机传来的角度数据*/ / 1000);
+				Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, DM_Motor_IMU_StructData.Euler_f_roll + error);
+			}
+		}
+	}
 }
 
 /* USER CODE END 1 */

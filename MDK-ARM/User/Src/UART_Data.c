@@ -25,7 +25,7 @@ static uint8_t UART6_To_UART1_Buf[64];//UART6转发到UART1数据转发暂存区
   */
 void UART_Init(void)
 {
-	HAL_UART_Receive_IT(&huart1, UART1_RX_Buf, 1);
+	//HAL_UART_Receive_IT(&huart1, UART1_RX_Buf, 1);
 	HAL_UART_Receive_IT(&huart6, UART6_RX_Buf, 1);
 }
 

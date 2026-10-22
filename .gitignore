@@ -1,0 +1,29 @@
+# Keil MDK 编译输出目录
+MDK-ARM/zero_program/
+MDK-ARM/Objects/
+MDK-ARM/Listings/
+MDK-ARM/DebugConfig/
+
+# 编译产物
+*.o
+*.axf
+*.crf
+*.d
+*.dep
+*.elf
+*.hex
+*.lnp
+*.map
+*.htm
+*.iex
+*.build_log
+
+# Keil IDE 个人配置（窗口布局/断点/调试书签）
+*.uvguix*
+*.uvoptx
+*.scvd
+
+# 备份与临时文件
+*.Bak
+*.bak
+*.tmp

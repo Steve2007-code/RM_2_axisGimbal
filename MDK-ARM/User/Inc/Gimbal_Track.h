@@ -18,6 +18,9 @@ extern float flag;
 extern float out1;
 extern float out2;
 
+extern uint8_t UART1_IMU_AND_Motor_RData[20];//存储串口最新数据的数组
+extern uint8_t rx_done;//数据包接收完成标志
+
 /*云台稳定PID数据结构体外部声明*/
 extern PID_t Gimbal_track_PID_X_Data;
 extern PID_t Gimbal_track_PID_Y_Data;

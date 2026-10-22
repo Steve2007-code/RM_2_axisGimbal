@@ -123,7 +123,22 @@ int main(void)
 //		HAL_Delay(50);
 		
 		UART_IMU_AND_Motor(&huart6);
-		printf("%f,%f,%f\n",Gimbal_track_Came_Data.x_raw,Gimbal_track_Came_Data.y_raw,Gimbal_track_Came_Data.Distance);
+//		Red_DM_IMU_raw(&DM_Motor_IMU_StructData, Euler_angle_data);
+		
+//		Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, 0);
+//		Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, 0);
+		
+//		if(rx_done == 1)
+//		{
+			//printf("%s\n", UART1_IMU_AND_Motor_RData);
+			printf("123%.2f,%.2f,%.2f\n", Gimbal_track_Came_Data.x_raw / 1000,
+																	Gimbal_track_Came_Data.y_raw / 1000,
+																	Gimbal_track_Came_Data.Distance);
+//			rx_done = 0;
+//		}
+		
+		//HAL_Delay(50);
+		//printf("%f,%f,%f\n",Gimbal_track_Came_Data.x_raw,Gimbal_track_Came_Data.y_raw,Gimbal_track_Came_Data.Distance);
 		
 //		printf("%f, %f, %f, %f, %f, %f, %f, %f, %f\n",DM_Motor_IMU_StructData.Euler_f_roll,
 //																DM_Motor_IMU_StructData.Euler_f_yaw,
@@ -131,11 +146,13 @@ int main(void)
 //																DM_Motor_IMU_StructData.Gyro_f_raw[0],
 //																DM_Motor_IMU_StructData.Gyro_f_raw[1],
 //																DM_Motor_IMU_StructData.Gyro_f_raw[2],
-//																flag,
-//																out1,
-//																out2);
-			Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, -Gimbal_track_Came_Data.y_raw);
-			Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, -Gimbal_track_Came_Data.x_raw);
+//																(DM_Motor_IMU_StructData.Euler_f_roll - (Gimbal_track_Came_Data.x_raw / 1000)),
+//																(Gimbal_track_Came_Data.x_raw / 1000.f),
+//																DM_Motor_IMU_StructData.Euler_f_roll);
+
+//			HAL_Delay(200);
+//			printf("hello\r\n");
+			
 		
 		
 //		for(float i = 0;i < 3; i += 0.01)
