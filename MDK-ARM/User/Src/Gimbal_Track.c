@@ -12,8 +12,8 @@
 PID_t Gimbal_track_PID_X_Data = {
 	.Target = 0,
 	
-	.Kp = 8.0f,
-	.Ki = 0.80f,
+	.Kp = 1.0f,
+	.Ki = 0.01f,
 	.Kd = 0.5f,
 	
 	.OutMax = 2.5,
@@ -26,8 +26,8 @@ PID_t Gimbal_track_PID_X_Data = {
 PID_t Gimbal_track_PID_Y_Data =  {
 	.Target = 0,
 	
-	.Kp = 8.0f,
-	.Ki = 0.6f,
+	.Kp = 1.0f,
+	.Ki = 0.01f,
 	.Kd = 0.50f,
 	
 	.OutMax = 2.5,
@@ -42,6 +42,7 @@ Came_Data Gimbal_track_Came_Data = {
 	.Distance = 0.0f,
 	.x_raw = 0.0f,
 	.y_raw = 0.0f,
+	.Yes_Red_Data_flag = 0,
 };
 
 /**
@@ -127,6 +128,7 @@ void UART_IMU_AND_Motor(UART_HandleTypeDef *huart)
 			uint8_t byte = UART6_RX_Fifo[UART6_RX_Rd];
 			UART6_RX_Rd = (UART6_RX_Rd + 1) % 128;
 			//串口接收到摄像头来的数据之后，进行数据存储（两帧数据间隔约34-36ms 数据发送持续时间约1.39ms）
+			/*摄像头识别到目标的数据处理(内含未识别到目标的数据处理)*/
 			switch(flag)
 			{
 				case 0:
@@ -156,7 +158,18 @@ void UART_IMU_AND_Motor(UART_HandleTypeDef *huart)
 						flag_Data = 0;
 						flag = 3;
 					}
-					else
+					/*如果第三个数据是0x4C(L)，表示摄像头未识别到目标，重新回到头部判断包头*/
+					else if(byte == 0x4c && flag == 2)
+					{
+						Gimbal_track_Came_Data.x_raw = 0.0f;
+						Gimbal_track_Came_Data.y_raw = 0.0f;
+						Gimbal_track_Came_Data.Distance = 0.0f;
+						Gimbal_track_Came_Data.Yes_Red_Data_flag = 0;
+						flag = 0;
+						break;
+					}
+					/*如果第三个数据是0x4C(L)，表示摄像头未识别到目标，重新回到头部判断包头*/
+					else 
 						flag = 0;
 					break;
 				}
@@ -214,13 +227,47 @@ void UART_IMU_AND_Motor(UART_HandleTypeDef *huart)
 					{
 						UART1_IMU_AND_Motor_RData[flag_Data] = '\0';
 						Gimbal_track_Came_Data.Distance = strtof((char*)UART1_IMU_AND_Motor_RData, NULL);
+						Gimbal_track_Came_Data.Yes_Red_Data_flag = 1;//完成一帧目标偏转角度解算之后标志位置1
 						flag_Data = 0;
 						rx_done = 1;
 					}
 					break;
 				}
 			}
-   }
+			/*摄像头识别到目标的数据处理(内含未识别到目标的数据处理)*/
+		}//while尾括号
+}//串口中断尾括号
+
+/**
+  * @brief  收到陀螺仪和摄像头角度数据了之后，综合解算出 Gimbal_Track_PID_X/Y 函数控制轴的目标角度
+  * @param  无
+  * @note		无
+  * @retval 无
+  */
+float target_angle_x = 0.0f;
+float target_angle_y = 0.0f;
+
+#define ANGLE_X_MAX  2.5f
+#define ANGLE_X_MIN -2.5f
+#define ANGLE_Y_MAX  2.5f
+#define ANGLE_Y_MIN -2.5f
+
+void Gimbal_Track_PID_Y_X_Target_Angle_Calculation(void)
+{
+	if(Gimbal_track_Came_Data.Yes_Red_Data_flag == 1)
+	{
+		target_angle_x += (-Gimbal_track_Came_Data.y_raw / 1000)/30;
+		target_angle_y += (-Gimbal_track_Came_Data.x_raw / 1000)/30;
+
+		if(target_angle_x > ANGLE_X_MAX) target_angle_x = ANGLE_X_MAX;
+		if(target_angle_x < ANGLE_X_MIN) target_angle_x = ANGLE_X_MIN;
+		if(target_angle_y > ANGLE_Y_MAX) target_angle_y = ANGLE_Y_MAX;
+		if(target_angle_y < ANGLE_Y_MIN) target_angle_y = ANGLE_Y_MIN;
+	}
+	else
+	{
+		;
+	}
 }
 
 

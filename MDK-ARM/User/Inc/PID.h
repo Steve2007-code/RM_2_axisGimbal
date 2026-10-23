@@ -1,6 +1,8 @@
 #ifndef __PID_H
 #define __PID_H
 
+#include "main.h"
+
 /*PID数据存储结构体*/
 typedef struct {
 	float Target;//目标
@@ -26,6 +28,7 @@ typedef struct {
 	float x_raw;//x还差的角度
 	float y_raw;//y还差的角度
 	float Distance;//目标距离
+	uint8_t Yes_Red_Data_flag;//识别并成功解析一帧数据的标志位 1-接收一帧成功 0-接收失败/无效
 } Came_Data;
 
 /*外部可调用函数声明*/

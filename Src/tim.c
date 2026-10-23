@@ -115,13 +115,13 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 
 /* USER CODE BEGIN 1 */
 /*¶¨Ê±Æ÷ÖĞ¶Ïº¯Êı*/
-float flag_timex = 0;
-uint8_t flag_statex = 0;
-uint8_t flag_state_Begx = 0;
+float flag_timex = 0;//ÖáĞı×ª½Ç¶È
+uint8_t flag_statex = 0;//ÖáĞı×ªËù´¦½×¶Î
+uint8_t flag_state_Begx = 0;//ÖáĞı×ª²âÊÔÑ¡Ôñ
 
-float flag_timey = 0;
-uint8_t flag_statey = 0;
-uint8_t flag_state_Begy = 0;
+float flag_timey = 0;//ÖáĞı×ª½Ç¶È
+uint8_t flag_statey = 0;//ÖáĞı×ªËù´¦½×¶Î
+uint8_t flag_state_Begy = 0;//ÖáĞı×ª²âÊÔÑ¡Ôñ
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -131,148 +131,148 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		cnt++;
 		if(cnt % 5 == 0)
 		{
-			Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, flag_timex);
-			Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, flag_timey);
+			Gimbal_Track_PID_X(&Gimbal_track_PID_X_Data, target_angle_x);
+			Gimbal_Track_PID_Y(&Gimbal_track_PID_Y_Data, target_angle_y);
 		}
 		
-				/*yÖáË²¼äÒÆ¶¯²âÊÔ*/
-		if(cnt % 450 == 0 && flag_state_Begy == 0)
-		{
-			if(flag_statey == 0)
-			{
-				flag_timey = 0.0f;
-				flag_statey = 1;
-			}
-			else if(flag_statey == 1)
-			{
-				flag_timey = 0.5f;
-				flag_statey = 2;
-			}
-			else if(flag_statey == 2)
-			{
-				flag_timey = 0.0f;
-				flag_statey = 3;
-			}
-			else if(flag_statey == 3)
-			{
-				flag_timey = -0.5f;
-				flag_statey = 4;
-			}
-			else if(flag_statey == 4)
-			{
-				flag_timey = 0.0f;
-				flag_statey = 0;
-				flag_state_Begy = 1;
-			}
-		}
-		
-		/*yÖáÆ½»¬ÒÆ¶¯²âÊÔ*/
-		if(cnt % 10 == 0 && flag_state_Begy == 1)
-		{
-			if(flag_timey <= 0.5f && flag_statey == 0)
-			{
-				flag_timey += 0.001f;
-				if(flag_timey >= 0.5f)
-				{
-					flag_statey = 1;
-				}
-			}
-			else if(flag_timey > 0.0f && flag_statey == 1)
-			{
-				flag_timey -= 0.001f;
-				if(flag_timey >= 0 || flag_timey <= 0)
-				{
-					flag_statey = 2;
-				}
-			}
-			else if((flag_timey >= -0.5f ) && flag_statey == 2)
-			{
-				flag_timey -= 0.001f;
-				if(flag_timey <= -0.5)
-				{
-					flag_statey = 3;
-				}
-			}
-			else if(flag_timey < 0.0f && flag_statey == 3)
-			{
-				flag_timey += 0.001f;
-				if(flag_timey >= 0)
-				{
-					flag_statey = 0;
-					flag_state_Begy = 0;
-				}
-			}
-		}
-		
-		/*xÖáË²¼äÒÆ¶¯²âÊÔ*/
-		if(cnt % 5000 == 0 && flag_state_Begx == 0)
-		{
-			if(flag_statex == 0)
-			{
-				flag_timex = 0.0f;
-				flag_statex = 1;
-			}
-			else if(flag_statex == 1)
-			{
-				flag_timex = 0.5f;
-				flag_statex = 2;
-			}
-			else if(flag_statex == 2)
-			{
-				flag_timex = 0.0f;
-				flag_statex = 3;
-			}
-			else if(flag_statex == 3)
-			{
-				flag_timex = -0.5f;
-				flag_statex = 4;
-			}
-			else if(flag_statex == 4)
-			{
-				flag_timex = 0.0f;
-				flag_statex = 0;
-				flag_state_Begx = 0;
-			}
-		}
-			
-			
-		/*xÖáÆ½»¬ÒÆ¶¯²âÊÔ*/
-		if(cnt % 10 == 0 && flag_state_Begx == 1)
-		{
-			if(flag_timex <= 0.5f && flag_statex == 0)
-			{
-				flag_timex += 0.001f;
-				if(flag_timex >= 0.5f)
-				{
-					flag_statex = 1;
-				}
-			}
-			else if(flag_timex > 0.0f && flag_statex == 1)
-			{
-				flag_timex -= 0.001f;
-				if(flag_timex >= 0 || flag_timex <= 0)
-				{
-					flag_statex = 2;
-				}
-			}
-			else if((flag_timex >= -0.5f ) && flag_statex == 2)
-			{
-				flag_timex -= 0.001f;
-				if(flag_timex <= -0.5)
-				{
-					flag_statex = 3;
-				}
-			}
-			else if(flag_timex < 0.0f && flag_statex == 3)
-			{
-				flag_timex += 0.001f;
-				if(flag_timex >= 0)
-				{
-					flag_statex = 0;
-					flag_state_Begx = 0;
-				}
-			}
-		}
+//				/*yÖáË²¼äÒÆ¶¯²âÊÔ*/
+//		if(cnt % 450 == 0 && flag_state_Begy == 0)
+//		{
+//			if(flag_statey == 0)
+//			{
+//				flag_timey = 0.0f;
+//				flag_statey = 1;
+//			}
+//			else if(flag_statey == 1)
+//			{
+//				flag_timey = 0.5f;
+//				flag_statey = 2;
+//			}
+//			else if(flag_statey == 2)
+//			{
+//				flag_timey = 0.0f;
+//				flag_statey = 3;
+//			}
+//			else if(flag_statey == 3)
+//			{
+//				flag_timey = -0.5f;
+//				flag_statey = 4;
+//			}
+//			else if(flag_statey == 4)
+//			{
+//				flag_timey = 0.0f;
+//				flag_statey = 0;
+//				flag_state_Begy = 1;
+//			}
+//		}
+//		
+//		/*yÖáÆ½»¬ÒÆ¶¯²âÊÔ*/
+//		if(cnt % 10 == 0 && flag_state_Begy == 1)
+//		{
+//			if(flag_timey <= 0.5f && flag_statey == 0)
+//			{
+//				flag_timey += 0.001f;
+//				if(flag_timey >= 0.5f)
+//				{
+//					flag_statey = 1;
+//				}
+//			}
+//			else if(flag_timey > 0.0f && flag_statey == 1)
+//			{
+//				flag_timey -= 0.001f;
+//				if(flag_timey >= 0 || flag_timey <= 0)
+//				{
+//					flag_statey = 2;
+//				}
+//			}
+//			else if((flag_timey >= -0.5f ) && flag_statey == 2)
+//			{
+//				flag_timey -= 0.001f;
+//				if(flag_timey <= -0.5)
+//				{
+//					flag_statey = 3;
+//				}
+//			}
+//			else if(flag_timey < 0.0f && flag_statey == 3)
+//			{
+//				flag_timey += 0.001f;
+//				if(flag_timey >= 0)
+//				{
+//					flag_statey = 0;
+//					flag_state_Begy = 0;
+//				}
+//			}
+//		}
+//		
+//		/*xÖáË²¼äÒÆ¶¯²âÊÔ*/
+//		if(cnt % 500 == 0 && flag_state_Begx == 0)
+//		{
+//			if(flag_statex == 0)
+//			{
+//				flag_timex = 0.0f;
+//				flag_statex = 1;
+//			}
+//			else if(flag_statex == 1)
+//			{
+//				flag_timex = 0.5f;
+//				flag_statex = 2;
+//			}
+//			else if(flag_statex == 2)
+//			{
+//				flag_timex = 0.0f;
+//				flag_statex = 3;
+//			}
+//			else if(flag_statex == 3)
+//			{
+//				flag_timex = -0.5f;
+//				flag_statex = 4;
+//			}
+//			else if(flag_statex == 4)
+//			{
+//				flag_timex = 0.0f;
+//				flag_statex = 0;
+//				flag_state_Begx = 1;
+//			}
+//		}
+//			
+//			
+//		/*xÖáÆ½»¬ÒÆ¶¯²âÊÔ*/
+//		if(cnt % 10 == 0 && flag_state_Begx == 1)
+//		{
+//			if(flag_timex <= 0.5f && flag_statex == 0)
+//			{
+//				flag_timex += 0.001f;
+//				if(flag_timex >= 0.5f)
+//				{
+//					flag_statex = 1;
+//				}
+//			}
+//			else if(flag_timex > 0.0f && flag_statex == 1)
+//			{
+//				flag_timex -= 0.001f;
+//				if(flag_timex >= 0 || flag_timex <= 0)
+//				{
+//					flag_statex = 2;
+//				}
+//			}
+//			else if((flag_timex >= -0.5f ) && flag_statex == 2)
+//			{
+//				flag_timex -= 0.001f;
+//				if(flag_timex <= -0.5)
+//				{
+//					flag_statex = 3;
+//				}
+//			}
+//			else if(flag_timex < 0.0f && flag_statex == 3)
+//			{
+//				flag_timex += 0.001f;
+//				if(flag_timex >= 0)
+//				{
+//					flag_statex = 0;
+//					flag_state_Begx = 0;
+//				}
+//			}
+//		}
 
 	}//if(htim->Instance == TIM1)ÅĞ¶ÏÎ²À¨ºÅ
 }//1msÖĞ¶Ïº¯ÊıÎ²À¨ºÅ

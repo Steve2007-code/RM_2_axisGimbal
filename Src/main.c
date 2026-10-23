@@ -122,13 +122,19 @@ int main(void)
 
 		UART_IMU_AND_Motor(&huart6);
 		Red_DM_IMU_EulerData();
-
-//		printf("%.4f,%.4f,%.4f\n", Gimbal_track_Came_Data.x_raw / 1000,
+		
+		Gimbal_Track_PID_Y_X_Target_Angle_Calculation();
+		printf("%.4f,%.4f,%.4f,%.4f\n", target_angle_x,target_angle_y,Gimbal_track_Came_Data.x_raw / 1000,Gimbal_track_Came_Data.y_raw / 1000);
+		
+		/*输出摄像头偏转数据(弧度)*/
+//		printf("%.4f,%.4f,%.4f,%d\n", Gimbal_track_Came_Data.x_raw / 1000,
 //																	Gimbal_track_Came_Data.y_raw / 1000,
-//																	Gimbal_track_Came_Data.Distance);
-		printf("%.4f,%.4f,%.4f\n", DM_Motor_IMU_StructData.Euler_f_pitch,
-																DM_Motor_IMU_StructData.Euler_f_roll,
-																DM_Motor_IMU_StructData.Euler_f_yaw);
+//																	Gimbal_track_Came_Data.Distance,
+//																	Gimbal_track_Came_Data.Yes_Red_Data_flag);
+		/*输出IMU数据(角度)*/
+//		printf("%.4f,%.4f,%.4f\n", DM_Motor_IMU_StructData.Euler_f_pitch,
+//																DM_Motor_IMU_StructData.Euler_f_roll,
+//																DM_Motor_IMU_StructData.Euler_f_yaw);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
