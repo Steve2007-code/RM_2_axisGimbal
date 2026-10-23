@@ -19,8 +19,8 @@ PID_t Gimbal_track_PID_X_Data = {
 	.OutMax = 2.5,
 	.OutMin = -2.5,
 	
-	.KiMax = 100,
-	.KiMin = -100,
+	.KiMax = 3,
+	.KiMin = -3,
 };
 //偏航
 PID_t Gimbal_track_PID_Y_Data =  {
@@ -33,8 +33,8 @@ PID_t Gimbal_track_PID_Y_Data =  {
 	.OutMax = 2.5,
 	.OutMin = -2.5,
 	
-	.KiMax = 100,
-	.KiMin = -100,
+	.KiMax = 3,
+	.KiMin = -3,
 };
 
 /*摄像机传来偏转数据结构体*/
