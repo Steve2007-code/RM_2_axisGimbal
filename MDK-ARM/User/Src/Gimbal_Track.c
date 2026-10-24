@@ -246,29 +246,52 @@ void UART_IMU_AND_Motor(UART_HandleTypeDef *huart)
   */
 float target_angle_x = 0.0f;
 float target_angle_y = 0.0f;
+float integral_x = 0.0f;
+float integral_y = 0.0f;
+float last_err_x = 0.0f;
+float last_err_y = 0.0f;
 
 #define ANGLE_X_MAX  2.5f
 #define ANGLE_X_MIN -2.5f
 #define ANGLE_Y_MAX  2.5f
 #define ANGLE_Y_MIN -2.5f
 
+#define TRACK_KP 20.00f
+#define TRACK_KI 0.0002f
+#define TRACK_KD 0.55f
+#define I_SEP_THRESHOLD 0.03f
+
 void Gimbal_Track_PID_Y_X_Target_Angle_Calculation(void)
 {
 	if(Gimbal_track_Came_Data.Yes_Red_Data_flag == 1)
 	{
-		target_angle_x += (-Gimbal_track_Came_Data.y_raw / 1000)/30;
-		target_angle_y += (-Gimbal_track_Came_Data.x_raw / 1000)/30;
+		float err_x = (-Gimbal_track_Came_Data.y_raw / 1000.0f)/30.0f;
+		float err_y = (-Gimbal_track_Came_Data.x_raw / 1000.0f)/30.0f;
+
+		if(fabsf(err_x) < I_SEP_THRESHOLD) integral_x += err_x;
+		if(fabsf(err_y) < I_SEP_THRESHOLD) integral_y += err_y;
+
+        // 微分 = 当前误差 - 上一次误差
+		float diff_x = err_x - last_err_x;
+		float diff_y = err_y - last_err_y;
+
+		float delta_x = TRACK_KP * err_x + TRACK_KI * integral_x + TRACK_KD * diff_x;
+		float delta_y = TRACK_KP * err_y + TRACK_KI * integral_y + TRACK_KD * diff_y;
+
+		target_angle_x += delta_x;
+		target_angle_y += delta_y;
 
 		if(target_angle_x > ANGLE_X_MAX) target_angle_x = ANGLE_X_MAX;
 		if(target_angle_x < ANGLE_X_MIN) target_angle_x = ANGLE_X_MIN;
-		if(target_angle_y > ANGLE_Y_MAX) target_angle_y = ANGLE_Y_MAX;
+		if(target_angle_y > ANGLE_Y_MAX) target_angle_y = ANGLE_Y_MIN;
 		if(target_angle_y < ANGLE_Y_MIN) target_angle_y = ANGLE_Y_MIN;
-	}
-	else
-	{
-		;
+
+		last_err_x = err_x;
+		last_err_y = err_y;
+		Gimbal_track_Came_Data.Yes_Red_Data_flag = 0;
 	}
 }
+
 
 
 
